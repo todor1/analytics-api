@@ -1,5 +1,10 @@
 from fastapi import APIRouter
-from .schemas import EventSchema, EventListSchema
+from .schemas import (
+    EventSchema, 
+    EventListSchema, 
+    EventCreateSchema,
+    EventUpdateSchema
+)
 router = APIRouter()
 
 # Get data here
@@ -19,9 +24,9 @@ def read_events() -> EventListSchema:
 # create view
 # POST /api/events/
 @router.post("/")
-def create_event(data:dict = {}) -> EventSchema:
+def create_event(payload:EventCreateSchema) -> EventSchema:
     # a bunch of items in a table
-    print(type(data))
+    print(payload.page)
     return {"id": 123}
 
 
@@ -35,8 +40,9 @@ def get_event(event_id:int) -> EventSchema:
 # Update this data
 # PUT /api/events/12
 @router.put("/{event_id}")
-def update_event(event_id:int, payload:dict={}) -> EventSchema:
+def update_event(event_id:int, payload:EventUpdateSchema) -> EventSchema:
     # a single row
+    print(payload.description)
     return {"id": event_id}
 
 
