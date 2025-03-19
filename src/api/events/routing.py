@@ -7,5 +7,5 @@ router = APIRouter()
 @router.get("/")
 def read_events():
     return {
-        "items": [1,2,3]
+        "results": [1,2,3]
     }
