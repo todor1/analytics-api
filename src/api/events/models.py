@@ -3,9 +3,9 @@ from typing import List, Optional
 from sqlmodel import SQLModel, Field
 
 
-class EventSchema(SQLModel):
-    # id: Optional[int] = Field(default=None, primary_key=True)
-    id: int
+class EventModel(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    # id: int
     page: Optional[str] = ""
     description: Optional[str] = ""
 
@@ -22,5 +22,5 @@ class EventUpdateSchema(SQLModel):
 # {"id": 12}
 
 class EventListSchema(SQLModel):
-    results: List[EventSchema]
+    results: List[EventModel]
     count: int
