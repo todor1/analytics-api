@@ -8,7 +8,8 @@ from .models import (
     EventModel, 
     EventListSchema, 
     EventCreateSchema,
-    EventUpdateSchema
+    EventUpdateSchema,
+    get_utc_now
 )
 router = APIRouter()
 
@@ -19,7 +20,7 @@ router = APIRouter()
 @router.get("/", response_model=EventListSchema)
 def read_events(session: Session = Depends(get_session)):
     # a bunch of items in a table
-    query = select(EventModel).order_by(EventModel.id.desc()).limit(10)
+    query = select(EventModel).order_by(EventModel.updated_at.asc()).limit(10)
     results = session.exec(query).all()
     return {
         "results": results,
@@ -68,6 +69,7 @@ def update_event(
     data = payload.model_dump()
     for k, v in data.items():
         setattr(obj, k, v)
+    obj.updated_at = get_utc_now()
     session.add(obj)
     session.commit()
     session.refresh(obj)
