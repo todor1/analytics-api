@@ -1,5 +1,5 @@
 import os
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 
 from api.db.session import get_session
@@ -19,7 +19,7 @@ router = APIRouter()
 @router.get("/", response_model=EventListSchema)
 def read_events(session: Session = Depends(get_session)):
     # a bunch of items in a table
-    query = select(EventModel).order_by(EventModel.id.asc()).limit(10)
+    query = select(EventModel).order_by(EventModel.id.desc()).limit(10)
     results = session.exec(query).all()
     return {
         "results": results,
@@ -43,10 +43,14 @@ def create_event(
 
 
 # GET /api/events/12
-@router.get("/{event_id}")
-def get_event(event_id:int) -> EventModel:
+@router.get("/{event_id}", response_model=EventModel)
+def get_event(event_id:int, session: Session = Depends(get_session)):
     # a single row
-    return {"id": event_id}
+    query = select(EventModel).where(EventModel.id == event_id)
+    result = session.exec(query).first()
+    if not result:
+        raise HTTPException(status_code=404, detail="Event not found")
+    return result
 
 
 # Update this data
