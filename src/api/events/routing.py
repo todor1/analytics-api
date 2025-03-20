@@ -1,6 +1,6 @@
 import os
 from fastapi import APIRouter
-from .schemas import (
+from .models import (
     EventSchema, 
     EventListSchema, 
     EventCreateSchema,
