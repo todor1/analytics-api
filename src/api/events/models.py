@@ -24,6 +24,9 @@ class EventModel(TimescaleModel, table=True):
         nullable=False
     )
 
+    __chunk_time_interval__ = "INTERVAL 1 day"
+    __drop_after__ = "INTERVAL 3 months"
+
 
 class EventCreateSchema(SQLModel):
     page: str
