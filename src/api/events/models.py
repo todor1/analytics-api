@@ -3,22 +3,21 @@ from typing import List, Optional
 # from pydantic import BaseModel, Field
 import sqlmodel
 from sqlmodel import SQLModel, Field
+from timescaledb import TimescaleModel
+from timescaledb.utils import get_utc_now
 
+# page visits at any given time
 
-def get_utc_now():
-    return datetime.now(timezone.utc).replace(tzinfo=timezone.utc)
-
-
-class EventModel(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
+class EventModel(TimescaleModel, table=True):
+    # id: Optional[int] = Field(default=None, primary_key=True)
     # id: int
-    page: Optional[str] = ""
+    page: str = Field(index=True) # /about, /contact, # pricing
     description: Optional[str] = ""
-    created_at: datetime = Field(
-        default_factory=get_utc_now,
-        sa_type=sqlmodel.DateTime(timezone=True),
-        nullable=False
-    )
+    # created_at: datetime = Field(
+    #     default_factory=get_utc_now,
+    #     sa_type=sqlmodel.DateTime(timezone=True),
+    #     nullable=False
+    # )
     updated_at: datetime = Field(
         default_factory=get_utc_now,
         sa_type=sqlmodel.DateTime(timezone=True),
